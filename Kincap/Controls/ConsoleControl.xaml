@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Kincap.Controls.ConsoleControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:Kincap.Controls"
+             d:DesignHeight="300" d:DesignWidth="200">
+    <UserControl.Resources>
+        <Style TargetType="ItemsControl" x:Key="LogViewerStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type local:LogEntry}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding DateTime}" Grid.Row="0" FontWeight="Bold" Margin="5,0,5,0"/>
+
+                <!--<TextBlock Text="{Binding Index}" Grid.Row="0" Grid.Column="1" FontWeight="Bold" Margin="5,0,5,0" />-->
+
+                <TextBlock Text="{Binding Message}" Grid.Row="1" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Border BorderThickness="1" BorderBrush="White">
+            <DockPanel>
+                <!--<TextBlock Text="{Binding Count, StringFormat='{}{0} Items'}"
+                   DockPanel.Dock="Top"/>-->
+
+                <ItemsControl x:Name="scroller_logs" ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer  CanContentScroll="True">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

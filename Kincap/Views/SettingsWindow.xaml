@@ -1,0 +1,68 @@
+﻿<Controls:MetroWindow x:Class="Kincap.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="Settings" Height="450" Width="300" ShowCloseButton="False" ShowMaxRestoreButton="False" ShowMinButton="False" GlowBrush="{DynamicResource AccentColorBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Smooth :" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <ComboBox x:Name="dropDown_smooth" Grid.Column="1" Grid.Row="3" Width="180" Height="25" SelectedIndex="0"/>
+        </Grid>
+        <Grid Grid.Row="1" Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="FPS :" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <ComboBox x:Name="dropDown_fps" Grid.Column="1" Grid.Row="3" Width="180" Height="25" SelectedIndex="0"/>
+        </Grid>
+        <Separator Grid.Row="2" HorizontalAlignment="Stretch" Width="200"/>
+        <Grid Grid.Row="3" Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Replay :" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Controls:ToggleSwitch x:Name="switchButton_replay" Grid.Column="1" Grid.Row="3" Width="180" Height="25"/>
+        </Grid>
+        <Separator Grid.Row="4" HorizontalAlignment="Stretch" Width="200"/>
+        <Grid Grid.Row="5" Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Near mode :" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Controls:ToggleSwitch x:Name="switchButton_nearMode" Grid.Column="1" Grid.Row="3" Width="180" Height="25"/>
+        </Grid>
+        <Grid Grid.Row="6" Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Seat mode :" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Controls:ToggleSwitch x:Name="switchButton_seatMode" Grid.Column="1" Grid.Row="3" Width="180" Height="25"/>
+        </Grid>
+        <Grid Grid.Row="7" Margin="5,5,5,15" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Width="80" HorizontalAlignment="Stretch" Content="OK" Click="button_ok_Click" />
+            <Button Grid.Column="1" Width="80" HorizontalAlignment="Stretch" Content="Cancel" Click="button_cancel_Click" />
+        </Grid>
+    </Grid>
+</Controls:MetroWindow>

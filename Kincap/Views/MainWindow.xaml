@@ -1,0 +1,75 @@
+﻿<Controls:MetroWindow x:Class="Kincap.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:userControls="clr-namespace:Kincap.Controls"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="Kincap" Height="720" Width="850" GlowBrush="{DynamicResource AccentColorBrush}" ShowWindowCommandsOnTop="True">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Click="button_settings_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                         Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                   VerticalAlignment="Center"
+                   Text="settings" />
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                         Visual="{StaticResource appbar_brick}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <userControls:KinectRecorderControl Margin="0,10,230,37" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Grid Width="50" Background="#FF086f9e" HorizontalAlignment="Right">
+            <StackPanel Margin="5" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Button Width="40" Height="40" Style="{DynamicResource MetroCircleButtonStyle}" Foreground="White" BorderBrush="White" Click="button_infos_Click">
+                    <Rectangle Width="20" Height="20" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_arrow_left}"/>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <TextBlock Text="Infos" HorizontalAlignment="Center" FontSize="20" Margin="5" Foreground="White">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="-90"></RotateTransform>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+    </Grid>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="infosFlyout"
+                             Margin="0 0 0 0"
+                             Width="220"
+                             Header="Infos"
+                             Position="Right"
+                             Theme="Accent">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition  Height="*"/>
+                    </Grid.RowDefinitions>
+                    <userControls:BVHEditorControl Grid.Row="0" x:Name="bvhEditor" Margin="10" Width="200" HorizontalAlignment="Right"/>
+                    <userControls:ConsoleControl Grid.Row="1" Margin="10,10,10,37" Width="200" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+                </Grid>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
+</Controls:MetroWindow>
