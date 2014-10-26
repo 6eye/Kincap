@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="0,20,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
             <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <ToggleButton Width="80" Height="80" Style="{DynamicResource MetroCircleToggleButtonStyle}" Checked="toggleButton_stream_Checked" Unchecked="toggleButton_stream_UnChecked">
+                <ToggleButton Width="80" Height="80" Style="{DynamicResource MetroCircleToggleButtonStyle}" Checked="toggleButton_stream_Checked" Unchecked="toggleButton_stream_UnChecked" ToolTip="Enable stream">
                     <Rectangle Width="30" Height="45" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_play_live}"/>
@@ -23,7 +23,7 @@
                 </ToggleButton>
             </StackPanel>
             <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <ToggleButton Width="80" Height="80" Style="{DynamicResource MetroCircleToggleButtonStyle}" Checked="toggleButton_rec_Checked" Unchecked="toggleButton_rec_UnChecked">
+                <ToggleButton Width="80" Height="80" Style="{DynamicResource MetroCircleToggleButtonStyle}" Checked="toggleButton_rec_Checked" Unchecked="toggleButton_rec_UnChecked" ToolTip="Start record stream and mocap data">
                     <Rectangle Width="40" Height="45" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_movie_clapper_select}"/>

@@ -613,22 +613,26 @@ namespace Kincap.Controls
 
         public void toggleButton_rec_Checked(object sender, RoutedEventArgs e)
         {
-            if (BVHFile == null && sensor != null)
-            {
-                Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Initialization"));
-                DateTime thisDay = DateTime.UtcNow;
-                string txtFileName = thisDay.ToString("dd.MM.yyyy_HH.mm");
-                BVHFile = new BVHWriter(txtFileName);
-                Window w = Window.GetWindow(this);
-                MainWindow mw = (MainWindow)w;
-                BVHFile.setBvhEditor(mw.bvhEditor);
-            }
+            Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Initialization"));
 
             Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog { Title = "Select filename", Filter = "Replay files|*.replay" };
 
             if (saveFileDialog.ShowDialog() == true)
             {
+                Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Recording Stream"));
                 DirectRecord(saveFileDialog.FileName);
+
+                if (BVHFile == null && sensor != null)
+                {
+                    Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Recording BHV"));
+                    //DateTime thisDay = DateTime.UtcNow;
+                    //string txtFileName = thisDay.ToString("dd.MM.yyyy_HH.mm");
+                    string txtFileName = saveFileDialog.FileName.Replace(".replay", "");
+                    BVHFile = new BVHWriter(txtFileName);
+                    Window w = Window.GetWindow(this);
+                    MainWindow mw = (MainWindow)w;
+                    BVHFile.setBvhEditor(mw.bvhEditor);
+                }
             }
         }
 
