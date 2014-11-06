@@ -2,5 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
+    <PublishUrlHistory>ftp://ftp.maximeschwob.com/www/softwares/kincap/|ftp://ftp.maximeschwob.com/www/softwares/|ftp://ftp.maximeschwob.com/www/fichiers/|ftp://ftp.maximeschwob.com/|publier\</PublishUrlHistory>
+    <InstallUrlHistory />
+    <SupportUrlHistory />
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>fr-FR</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>J:\Taf\Dropbox\CG_THE_DREAM\MOCAP KINECT\Moso\ToolBox\bin\Release\;J:\Taf\Dropbox\CG_THE_DREAM\MOCAP KINECT\Moso\Kincap\bin\Release\</ReferencePath>
   </PropertyGroup>
 </Project>
