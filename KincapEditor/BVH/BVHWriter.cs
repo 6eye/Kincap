@@ -52,7 +52,7 @@ namespace Kincap
 
         public void closeBVHFile()
         {
-            sw.Stop(); // Aufnahme beendet
+            sw.Stop(); // finished recording
             file.Flush();
             file.Close();
             string text = File.ReadAllText(fileName);
@@ -72,7 +72,6 @@ namespace Kincap
             get { return initializing; }
         }
 
-        //eigentliche Schreibarbeit:
         public void Entry(Skeleton skel)
         {
             this.intializingCounter++;
@@ -100,7 +99,6 @@ namespace Kincap
         {
             for (int k = 0; k < bvhSkeleton.Bones.Count; k++)
             {
-                //double length = Math.Sqrt(Math.Pow(Math.Round(tempOffsetMatrix[0, k] , 5),2) + Math.Pow(Math.Round(tempOffsetMatrix[1, k] , 5),2) + Math.Pow(Math.Round(tempOffsetMatrix[2, k] , 5),2));  
                 double length = Math.Max(Math.Abs(tempOffsetMatrix[0, k]), Math.Abs(tempOffsetMatrix[1, k]));
                 length = Math.Max(length, Math.Abs(tempOffsetMatrix[2, k]));
                 length = Math.Round(length, 2);
@@ -129,8 +127,6 @@ namespace Kincap
                     default:
                         bvhSkeleton.Bones[k].setTransOffset(tempOffsetMatrix[0, k], tempOffsetMatrix[1, k], tempOffsetMatrix[2, k]);
                         break;
-
-
                 }
             }
 
@@ -223,7 +219,7 @@ namespace Kincap
 
         public void Motion(Skeleton skel)
         {
-            sw.Start(); //Aufnahme der Bewegungen beginnt
+            sw.Start(); // Begin recording movements
 
             for (int k = 0; k < bvhSkeletonWritten.Bones.Count; k++)
             {
@@ -242,22 +238,22 @@ namespace Kincap
                     tempMotionVektor[bvhSkeletonWritten.Bones[k].MotionSpace + 1 + indexOffset] = degVec[1];
                     tempMotionVektor[bvhSkeletonWritten.Bones[k].MotionSpace + 2 + indexOffset] = degVec[2];
 
-                    // Textbox setzen
+                    // set Textbox
                     string boneName = bvhSkeletonWritten.Bones[k].Name;
                     if (boneName == bvhEditor.DropDownJoint)
                     {
-                        //Rotation
+                        // Rotation
                         string textBox = Math.Round(degVec[0], 1).ToString() + " " + Math.Round(degVec[1], 1).ToString() + " " + Math.Round(degVec[2], 1).ToString();
                         bvhEditor.TextBoxAngles = textBox;
 
-                        //Position
+                        // Position
                         JointType KinectJoint = BVHKinectSkeleton.getJointTypeFromBVHBone(bvhSkeletonWritten.Bones[k]);
                         double x = skel.Joints[KinectJoint].Position.X;
                         double y = skel.Joints[KinectJoint].Position.Y;
                         double z = skel.Joints[KinectJoint].Position.Z;
                         bvhEditor.TextPosition = Math.Round(x, 2).ToString() + " " + Math.Round(y, 2).ToString() + " " + Math.Round(z, 2).ToString();
 
-                        //Length
+                        // Length
                         BVHBone tempBone = bvhSkeletonWritten.Bones.Find(i => i.Name == KinectJoint.ToString());
                         double[] boneVec = BVHKinectSkeleton.getBoneVectorOutofJointPosition(tempBone, skel);
                         double length = Math.Sqrt(Math.Pow(boneVec[0], 2) + Math.Pow(boneVec[1], 2) + Math.Pow(boneVec[2], 2));
@@ -267,7 +263,7 @@ namespace Kincap
                 }
 
             }
-            //Root Bewegung
+            // Root motion
             tempMotionVektor[0] = -Math.Round(skel.Position.X * 100, 2);
             tempMotionVektor[1] = Math.Round(skel.Position.Y * 100, 2) + 120;
             tempMotionVektor[2] = 300 - Math.Round(skel.Position.Z * 100, 2);

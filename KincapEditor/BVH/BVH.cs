@@ -65,7 +65,7 @@ namespace Kincap
                 if (Bones[k].Depth > maxDepth)
                     maxDepth = Bones[k].Depth;
 
-                //set Bone Index for Motion Values Array
+                // set Bone Index for Motion Values Array
                 int motionCount = 0;
                 for (int n = 0; n < k; n++)
                 {
@@ -73,10 +73,10 @@ namespace Kincap
                 }
                 Bones[k].MotionSpace = motionCount;
 
-                //set Count of Channels for Skeleton
+                // set Count of Channels for Skeleton
                 channels += Bones[k].ChannelCount;
 
-                //set Children
+                // set Children
                 List<BVHBone> childBoneList = Bones.FindAll(i => i.Parent == Bones[k]);
                 if (childBoneList.Count == 0)
                 {
@@ -115,7 +115,7 @@ namespace Kincap
         public double[] translOffset = new double[] { 0, 0, 0 };
         bool end;
         bool root;
-        int motionSpace; // gibt erstes Element in der Motionspalte an
+        int motionSpace; // is the first item in the column of Motion
         TransAxis axis;
         bool isKinectJoint;
 

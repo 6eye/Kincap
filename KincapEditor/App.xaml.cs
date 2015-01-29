@@ -13,14 +13,11 @@ namespace Kincap
     /// </summary>
     public partial class App : Application
     {
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             StartupUri = new Uri("/Kincap;component/Views/MainWindow.xaml", UriKind.Relative);
-            
         }
-      
     }
 }

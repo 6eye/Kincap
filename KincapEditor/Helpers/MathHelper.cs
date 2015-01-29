@@ -24,23 +24,6 @@ namespace Kincap
             return value;
         }
 
-        /*
-        public static Quaternion Deg2Quat(double[] deg)
-        {
-            Quaternion quat = new Quaternion();
-            double a = deg[0] * (Math.PI / 180);
-            double b = deg[1] * (Math.PI / 180);
-            double c = deg[2] * (Math.PI / 180);
-
-            quat.W = Math.Cos(a / 2) * Math.Cos(b / 2) * Math.Cos(c / 2) + Math.Sin(a / 2) * Math.Sin(b / 2) * Math.Sin(c / 2);
-            quat.X = Math.Sin(a / 2) * Math.Cos(b / 2) * Math.Cos(c / 2) - Math.Cos(a / 2) * Math.Sin(b / 2) * Math.Sin(c / 2);
-            quat.Y = Math.Cos(a / 2) * Math.Sin(b / 2) * Math.Cos(c / 2) + Math.Sin(a / 2) * Math.Cos(b / 2) * Math.Sin(c / 2);
-            quat.Z = Math.Cos(a / 2) * Math.Cos(b / 2) * Math.Sin(c / 2) - Math.Sin(a / 2) * Math.Sin(b / 2) * Math.Cos(c / 2);
-
-            return quat;
-        }
-         * */
-
         public static Matrix3D GetRotationMatrixX(double angle)
         {
             if (angle == 0.0)
@@ -50,10 +33,11 @@ namespace Kincap
             double sin = (double)Math.Sin(angle);
             double cos = (double)Math.Cos(angle);
             return new Matrix3D(
-         1, 0, 0, 0,
-         0, cos, -sin, 0,
-         0, sin, cos, 0,
-         0, 0, 0, 1);
+                                 1  , 0 , 0 , 0,
+                                 0  , cos,-sin, 0,
+                                 0  , sin, cos, 0,
+                                 0  , 0 , 0 , 1
+                                 );
         }
 
 
@@ -66,10 +50,11 @@ namespace Kincap
             double sin = (double)Math.Sin(angle);
             double cos = (double)Math.Cos(angle);
             return new Matrix3D(
-        cos, 0, sin, 0,
-        0, 1, 0, 0,
-        -sin, 0, cos, 0,
-        0, 0, 0, 1);
+                                cos , 0 , sin, 0,
+                                0   , 1 , 0  , 0,
+                                -sin, 0 , cos, 0,
+                                0   , 0 , 0  , 1
+                                );
         }
 
         public static Matrix3D GetRotationMatrixZ(double angle)
@@ -81,10 +66,10 @@ namespace Kincap
             double sin = (double)Math.Sin(angle);
             double cos = (double)Math.Cos(angle);
             return new Matrix3D(
-         cos, -sin, 0, 0,
-         sin, cos, 0, 0,
-         0, 0, 1, 0,
-         0, 0, 0, 1);
+                                 cos, -sin, 0, 0,
+                                 sin, cos, 0, 0,
+                                 0, 0, 1, 0,
+                                 0, 0, 0, 1);
         }
 
         public static Matrix3D GetRotationMatrix(double ax, double ay, double az)
@@ -92,48 +77,36 @@ namespace Kincap
             Matrix3D my = Matrix3D.Identity;
             Matrix3D mz = Matrix3D.Identity;
             Matrix3D result = Matrix3D.Identity;
+
             if (ax != 0.0)
-            {
                 result = GetRotationMatrixX(ax);
-            }
+
             if (ay != 0.0)
-            {
                 my = GetRotationMatrixY(ay);
-            }
+
             if (az != 0.0)
-            {
                 mz = GetRotationMatrixZ(az);
-            }
+
             if (my != null)
             {
                 if (result != null)
-                {
                     result *= my;
-                }
                 else
-                {
                     result = my;
-                }
             }
+
             if (mz != null)
             {
                 if (result != null)
-                {
                     result *= mz;
-                }
                 else
-                {
                     result = mz;
-                }
             }
+
             if (result != null)
-            {
                 return result;
-            }
             else
-            {
                 return Matrix3D.Identity;
-            }
         }
 
 
@@ -178,19 +151,19 @@ namespace Kincap
         public static double[] rotMatrix2Deg(Matrix4 mat)
         {
             double[] value = new double[3];
-            //Quelle: http://social.msdn.microsoft.com/Forums/en-US/b644698d-bdec-47a2-867e-574cf84e5db7/what-is-the-default-sequence-of-hierarchical-rotation-matrix-eg-xyz-#b3946d0d-9658-4c2b-b14b-69e79070c7d2
+            // Source : http://social.msdn.microsoft.com/Forums/en-US/b644698d-bdec-47a2-867e-574cf84e5db7/what-is-the-default-sequence-of-hierarchical-rotation-matrix-eg-xyz-#b3946d0d-9658-4c2b-b14b-69e79070c7d2
             // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
-            // Kinect Matrix hat die Tait-Bryan Convention mit Y1 X2 Z3 
-            // Problem: Es gibt immer 2 Möglichkeiten für Drehung im 3D Raum, weshalb die Gradwerte nicht immer den Quaternionenwerte entsprechen müssen!
-            // Drehung um y- Achse 
+            // Kinect matrix has the Tait-Bryan Convention with Y1 X2 Z3
+            // Problem: There are always 2 options for rotation in 3D space, and therefore the degree values do not always correspond to the quaternions values!
+            // Rotation around the y-axis
             value[0] = Math.Asin(-mat.M23);
-            // Drehung um x- Achse
+            // Rotation around the x-axis
             value[1] = Math.Atan2(mat.M13 / Math.Cos(value[0]), mat.M33 / Math.Cos(value[0]));
-            // Drehung um z- Achse
+            // Rotation around the z-axis
             value[2] = Math.Atan2(mat.M21 / Math.Cos(value[0]), mat.M22 / Math.Cos(value[0]));
 
 
-            // Um auf die gleichen Winkel wie bei den Quaternionen zu kommen muss man die Winkel negieren
+            // To arrive at the same angle as the quaternions, you have to negate the angle
             value[0] = value[0] * -(180 / Math.PI);
             value[1] = value[1] * -(180 / Math.PI);
             value[2] = value[2] * -(180 / Math.PI);

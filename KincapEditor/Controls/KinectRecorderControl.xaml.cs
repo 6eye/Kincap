@@ -92,7 +92,6 @@ namespace Kincap.Controls
             ms_Stream = new MemoryStream();
             ms_Skeleton = new MemoryStream();
 
-            //StartSensorSteams();
             StartSensor();
         }
 
@@ -113,17 +112,6 @@ namespace Kincap.Controls
                 }
             }
         }
-
-        /*private void StartSensorSteams()
-        {
-            // Turn on the stream to receive frames
-            this.sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-            //this.sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-            this.sensor.SkeletonStream.Enable(Settings.SmoothingParam);
-
-            // event handler to be called whenever there is new frame data
-            this.sensor.AllFramesReady += sensor_allFramesReady;
-        }*/
 
         private void StartSensor()
         {
@@ -191,12 +179,6 @@ namespace Kincap.Controls
                             fpsEnd = 30;
                             break;
                     }
-
-                    //System.Drawing.Image tempSkeletonFrame = new Bitmap((int)this.image_skeleton.MinWidth, (int)this.image_skeleton.MinHeight);
-                    // zeichne Skelette auf schwarzem Hintergrund in der Picturebox
-
-                    //OBSOLETE
-                    //this.image_skeleton.BackColor = System.Drawing.Color.Black;
 
                     Skeleton[] skeletons = new Skeleton[frame.SkeletonArrayLength];
                     frame.GetSkeletons(ref skeletons);
@@ -306,27 +288,11 @@ namespace Kincap.Controls
                         
                     }
                 }
-                /*
-                using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
-                {
-                    if (depthFrame != null)
-                    {
-                        // Kinect Depth Frame to Bitmap
-                        Bitmap tempDepthFrame = DepthImageFrameToBitmap(depthFrame);
-                        this.pictureBox_depthPic.Image = new Bitmap(tempDepthFrame, this.pictureBox_depthPic.Width, this.pictureBox_depthPic.Height);
-                    }
-                }
-                */
+
                 using (SkeletonFrame skelFrame = e.OpenSkeletonFrame())
                 {
                     if (skelFrame != null)
                     {
-                        //System.Drawing.Image tempSkeletonFrame = new Bitmap((int)this.image_skeleton.MinWidth, (int)this.image_skeleton.MinHeight);
-                        // zeichne Skelette auf schwarzem Hintergrund in der Picturebox
-                        
-                        //OBSOLETE
-                        //this.image_skeleton.BackColor = System.Drawing.Color.Black;
-
                         Skeleton[] skeletons = new Skeleton[skelFrame.SkeletonArrayLength];
                         skelFrame.CopySkeletonDataTo(skeletons);
                         if (skeletons.Length != 0)
@@ -335,9 +301,6 @@ namespace Kincap.Controls
                             {
                                 if (skel.TrackingState == SkeletonTrackingState.Tracked)
                                 {
-                                    //Zeichne Skelett
-                                    //DrawSkeletons(tempSkeletonFrame, skel);
-
                                     if (BVHFile != null)
                                     {
                                         if (BVHFile.isRecording == true && BVHFile.isInitializing == true)
@@ -360,22 +323,6 @@ namespace Kincap.Controls
                                 }
                             }
                         }
-
-                        // help to translate system Drawing.Image to Windows.Media.ImageSource
-                        /*BitmapImage bi = new BitmapImage();
-                        bi.BeginInit();
-                        // Save to a memory stream...
-                        tempSkeletonFrame.Save(ms_Skeleton, ImageFormat.Bmp);
-                        // Rewind the stream...
-                        ms_Skeleton.Seek(0, SeekOrigin.Begin);
-                        // Tell the WPF image to use this stream...
-                        bi.StreamSource = ms_Skeleton;
-                        bi.EndInit();
-                        this.image_skeleton.Source = bi;
-
-                        //record
-                        if (recorder != null && recorder.Options != 0)
-                            recorder.Record(skelFrame);*/
                     }
                 }
             }
@@ -390,52 +337,6 @@ namespace Kincap.Controls
             byte[] pixelBuffer = new byte[colorFrame.PixelDataLength];
             colorFrame.CopyPixelDataTo(pixelBuffer);
             Bitmap bitmapFrame = ArrayToBitmap(pixelBuffer, colorFrame.Width, colorFrame.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-            return bitmapFrame;
-        }
-
-        //wird aktuell nicht gebraucht
-        private Bitmap DepthImageFrameToBitmap(DepthImageFrame depthFrame)
-        {
-            DepthImagePixel[] depthPixels = new DepthImagePixel[depthFrame.PixelDataLength];
-            byte[] colorPixels = new byte[depthFrame.PixelDataLength * 4];
-            depthFrame.CopyDepthImagePixelDataTo(depthPixels);
-
-            // Get the min and max reliable depth for the current frame
-            int minDepth = depthFrame.MinDepth;
-            int maxDepth = depthFrame.MaxDepth;
-
-            // Convert the depth to RGB
-            int colorPixelIndex = 0;
-            for (int i = 0; i < depthPixels.Length; ++i)
-            {
-                // Get the depth for this pixel
-                short depth = depthPixels[i].Depth;
-
-                // To convert to a byte, we're discarding the most-significant
-                // rather than least-significant bits.
-                // We're preserving detail, although the intensity will "wrap."
-                // Values outside the reliable depth range are mapped to 0 (black).
-
-                // NOTE: Using conditionals in this loop could degrade performance.
-                // Consider using a lookup table instead when writing production code.
-                // See the KinectDepthViewer class used by the KinectExplorer sample
-                // for a lookup table example.
-                byte intensity = (byte)(depth >= minDepth && depth <= maxDepth ? depth : 0);
-
-                // Write out blue byte
-                colorPixels[colorPixelIndex++] = intensity;
-
-                // Write out green byte
-                colorPixels[colorPixelIndex++] = intensity;
-
-                // Write out red byte                        
-                colorPixels[colorPixelIndex++] = intensity;
-
-                // We're outputting BGR, the last byte in the 32 bits is unused so skip it
-                // If we were outputting BGRA, we would write alpha here.
-                ++colorPixelIndex;
-            }
-            Bitmap bitmapFrame = ArrayToBitmap(colorPixels, depthFrame.Width, depthFrame.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
             return bitmapFrame;
         }
 
@@ -459,7 +360,7 @@ namespace Kincap.Controls
             StopKinect(sensor);
         }
 
-        //TODO: evtl folgende FUnktionen auslagern
+        //TODO: possibly outsource the following functions
         private void DrawBonesAndJoints(Skeleton skeleton, Graphics graphicBox)
         {
             /// Brush used to draw skeleton center point
@@ -471,7 +372,7 @@ namespace Kincap.Controls
             /// Brush used for drawing joints that are currently inferred      
             System.Drawing.Pen inferredJointPen = new System.Drawing.Pen(System.Drawing.Color.Yellow);
 
-            // gefundene Punkte als Kreise malen
+            // paint found points as circles
             foreach (Joint joint in skeleton.Joints)
             {
                 System.Drawing.Pen drawPen = null;
@@ -491,7 +392,7 @@ namespace Kincap.Controls
                 }
             }
 
-            //Verbindungen zwischen Punkten malen
+            // Draw connections between points
             // Render Torso
             this.DrawBone(skeleton, graphicBox, JointType.Head, JointType.ShoulderCenter);
             this.DrawBone(skeleton, graphicBox, JointType.ShoulderCenter, JointType.ShoulderLeft);
@@ -569,16 +470,13 @@ namespace Kincap.Controls
             System.Drawing.Point endPixel = SkeletonPointToScreen(joint1.Position);
             double distanceBtw2Joints = Math.Round(calcDistanceBtw2Points(joint0.Position, joint1.Position) * 100) / 100;
 
-            //Linie zwischen 2 Joints wird gezeichnet
+            // Line between two joints is drawn
             graphicBox.DrawLine(drawPen, startPixel, endPixel);
 
-            //Länge des Bones wird daneben geschrieben
+            // Length of Bones is written next to it
             int textPosPixelX = Convert.ToInt32(Math.Abs(Math.Round(0.5 * (startPixel.X + endPixel.X))));
             int textPosPixelY = Convert.ToInt32(Math.Abs(Math.Round(0.5 * (startPixel.Y + endPixel.Y))));
             PointF textPos = new PointF(textPosPixelX, textPosPixelY);
-
-
-            //graphicBox.DrawString(distanceBtw2Joints.ToString(), new Font("Arial", 20), new SolidBrush(Color.White), textPos);
 
             return;
         }
@@ -625,8 +523,7 @@ namespace Kincap.Controls
                 if (BVHFile == null && sensor != null)
                 {
                     Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Recording BHV"));
-                    //DateTime thisDay = DateTime.UtcNow;
-                    //string txtFileName = thisDay.ToString("dd.MM.yyyy_HH.mm");
+
                     string txtFileName = saveFileDialog.FileName.Replace(".replay", "");
                     BVHFile = new BVHWriter(txtFileName);
                     Window w = Window.GetWindow(this);
@@ -657,9 +554,7 @@ namespace Kincap.Controls
             {
                 if (sensor.IsRunning)
                 {
-                    //stop sensor 
                     sensor.Stop();
-                    //sensor.Dispose();
                 }
             }
         }
@@ -681,7 +576,6 @@ namespace Kincap.Controls
                 sensor.DepthStream.Range = DepthRange.Default;
                 sensor.SkeletonStream.EnableTrackingInNearRange = false;
             }
-        
 
             if(Models.Settings.SeatedMode)
             {
@@ -707,7 +601,7 @@ namespace Kincap.Controls
                     replay.ColorImageFrameReady -= replay_ColorImageFrameReady;
                     replay.Stop();
                 }
-                //StartSensorSteams();
+
                 this.image_stream.DataContext = colorManager;
                 Stream recordStream = File.OpenRead(openFileDialog.FileName);
 
@@ -722,7 +616,6 @@ namespace Kincap.Controls
 
         void replay_ColorImageFrameReady(object sender, ReplayColorImageFrameReadyEventArgs e)
         {
-            //this.image_stream.Source = colorManager.Bitmap;
             colorManager.Update(e.ColorImageFrame);
         }
 
@@ -753,12 +646,6 @@ namespace Kincap.Controls
                         break;
                 }
 
-                //System.Drawing.Image tempSkeletonFrame = new Bitmap((int)this.image_skeleton.MinWidth, (int)this.image_skeleton.MinHeight);
-                // zeichne Skelette auf schwarzem Hintergrund in der Picturebox
-
-                //OBSOLETE
-                //this.image_skeleton.BackColor = System.Drawing.Color.Black;
-
                 Skeleton[] skeletons = e.SkeletonFrame.Skeletons;
                 if (skeletons.Length != 0)
                 {
@@ -776,7 +663,6 @@ namespace Kincap.Controls
                                     {
                                         BVHFile.startWritingEntry();
                                     }
-
                                 }
 
                                 if (BVHFile.isRecording == true && BVHFile.isInitializing == false)

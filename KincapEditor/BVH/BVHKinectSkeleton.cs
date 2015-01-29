@@ -13,7 +13,7 @@ namespace Kincap
 
         public static void AddKinectSkeleton(BVHSkeleton Skeleton)
         {
-            //Die Person steht falsch herum im Koordinatensystem der Kinect! Es wird erst beim Abspeichern korrigiert, weshalb die Verarbeitung noch mit umgekehrten Koordinaten erfolgt
+            // The person is the wrong way round in the coordinate system of the Kinect! It is only corrected when saving, so the processing is still with inverted coordinates
             BVHBone hipCenter = new BVHBone(null, JointType.HipCenter.ToString(), 6, TransAxis.None, true);
             BVHBone hipCenter2 = new BVHBone(hipCenter, "HipCenter2", 3, TransAxis.Y, false);
             BVHBone spine = new BVHBone(hipCenter2, JointType.Spine.ToString(), 3, TransAxis.Y, true);
@@ -206,13 +206,13 @@ namespace Kincap
                     noData = true;
                     break;
                 case "Spine":
-                    //Gibt die Rotation der Wirbelsäule zwischen Spine Joint und Shoulder Center an. 
+                    // Specifies the rotation of the spine between Spine and Shoulder Joint Center.
                     degVec[0] = 30;
                     degVec[1] = 0;
                     degVec[2] = 0;
                     noData = true;
                     break;
-                case "Head": //Informationen sind in "Neck"
+                case "Head": // Information in "Neck"
                     noData = true;
                     break;
                 case "AnkleRight":
@@ -228,7 +228,7 @@ namespace Kincap
             if (bone.Root == false)
             {
 
-                //Das BVH Skelett hat mehr Knochen wie das Kinect Skelett, diese Joints haben dauerthaft die Rotationen 0 0 0 
+                // The BVH skeleton have more bones such as the Kinect Skeleton, Joints have this permanent rotations 0 0 0
                 if (noData == false)
                 {
                     Quaternion tempQuat;
@@ -244,7 +244,7 @@ namespace Kincap
                             degVec[2] = -degVec[2];
                         }
 
-                        //Beine
+                        // Legs
                         if (bone.Axis == TransAxis.nY)
                         {
                             degVec[0] = -degVec[0];
@@ -253,7 +253,7 @@ namespace Kincap
 
                         }
 
-                        //Rechter Arm
+                        // Right Arm
                         if (bone.Axis == TransAxis.nX && bone.Name != "ShoulderRight")
                         {
                             double[] tempDecVec = new double[3] { degVec[0], degVec[1], degVec[2] };
@@ -263,7 +263,7 @@ namespace Kincap
 
                         }
                         /*
-                        //Rechte Schulter
+                        // Rechte Shoulder
                         if (bone.Name == "ShoulderRight")
                         {
                             double[] tempDecVec = new double[3] { degVec[0], degVec[1], degVec[2] };
@@ -273,7 +273,7 @@ namespace Kincap
 
                         }
 
-                        //Linke Schulter
+                        // Left Shoulder
                         if (bone.Name == "ShoulderLeft")
                         {
                             double[] tempDecVec = new double[3] { degVec[0], degVec[1], degVec[2] };
@@ -284,7 +284,7 @@ namespace Kincap
                         }
                         */
 
-                        //Linker Arm
+                        // Left Arm
                         if (bone.Axis == TransAxis.X && bone.Name != "ShoulderLeft")
                         {
                             double[] tempDecVec = new double[3] { degVec[0], degVec[1], degVec[2] };
@@ -298,7 +298,7 @@ namespace Kincap
                     }
                     else
                     {
-                        //Rotation per "Hand" ausrechnen mithilfe von Vektoren. Ist nötig, da dass BVH Skelett an den Hüft- und Schulterknochen nicht mit dem Kinect Skelett übereinstimmen
+                        // Calculate rotation by "hand" using vectors. Is necessary because that BVH skeleton does not match at the hip and shoulder bones with the Kinect Skeleton
                         Vector3D vec = new Vector3D();
                         Vector3D axis = new Vector3D();
 
@@ -382,7 +382,7 @@ namespace Kincap
 
 
                             degVec[0] = -degVec[0];
-                            degVec[1] = -degVec[1]; //Nur Yaw WInkel Wichtig
+                            degVec[1] = -degVec[1]; //Only Yaw angle Important
                             degVec[2] = -degVec[2];
                         }
                     }
@@ -393,22 +393,22 @@ namespace Kincap
             else
             {
 
-                //Kinect Kamera Koordinatensystem ist genau spiegelverkehrt zum User Koordinatensystem
+                // Kinect camera coordinate system is exactly mirrored the user coordinate system
                 Vector4 tempQuat = skel.BoneOrientations[kinectJoint].AbsoluteRotation.Quaternion;
                 degVec = MathHelper.quat2Deg(tempQuat);
 
 
-                //Hüfte bleibt immer parallel zum Boden ausgerichtet. Nur Oberkörper kann sich "verbiegen"
+                // Hip is always aligned parallel to the ground. Only the upper body can "bend"
                 degVec[0] = 0;
-                degVec[1] = -degVec[1]; //Drehung um die eigene Achse "YAW Winkel"
+                degVec[1] = -degVec[1]; // Rotation about its own axis "yaw angle"
                 degVec[2] = 0;
 
             }
-            //Korrektur
+            // correction
             degVec = MathHelper.addArray(degVec, correctionDegVec);
 
 
-            //Falls WInkel über 180 Grad ist
+            // If angle is about 180 degrees
             for (int k = 0; k < 3; k++)
             {
                 if (degVec[k] > 180)
@@ -421,7 +421,7 @@ namespace Kincap
                 }
             }
 
-            bone.setRotOffset(degVec[0], degVec[1], degVec[2]); //wird eigentlich nicht benötigt
+            bone.setRotOffset(degVec[0], degVec[1], degVec[2]); // is not actually required
             return degVec;
         }
 

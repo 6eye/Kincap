@@ -28,7 +28,7 @@
     <PublisherName>Spankadikt</PublisherName>
     <SuiteName>Moso</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -246,9 +246,7 @@
     <Resource Include="Resources\Entypo-license.txt" />
     <Resource Include="Resources\WindowsIcons-license.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="LogSystem\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ToolBox\Kinect.Toolbox.csproj">
       <Project>{2c84ce43-cdab-4541-a55a-7f849e8ac247}</Project>

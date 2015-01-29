@@ -34,7 +34,6 @@ namespace Kincap.Controls
 
             DataContext = LogEntries = new ObservableCollection<LogEntry>();
 
-            //ContentPresenter cp = scroller_logs.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
             ContentPresenter cp = scroller_logs.ItemContainerGenerator.ContainerFromIndex(0) as ContentPresenter;
             ScrollViewer sv = FindVisualChild<ScrollViewer>(cp);
             if (sv != null)

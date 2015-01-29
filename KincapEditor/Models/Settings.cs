@@ -101,7 +101,6 @@ namespace Kincap.Models
                 };
             }
 
-
             OnSetSettings.Invoke();
         }
     }
