@@ -90,14 +90,14 @@ namespace Kincap
             }
         }
 
-        public void copyParameters(BVHSkeleton input)
+        public void CopyParameters(BVHSkeleton input)
         {
             channels = input.Channels;
             maxDepth = input.maxDepth;
             nrBones = input.nrBones;
         }
 
-        public int getMaxDepth()
+        public int GetMaxDepth()
         {
             return maxDepth;
         }
@@ -200,12 +200,12 @@ namespace Kincap
             }
         }
 
-        public void setTransOffset(double xOff, double yOff, double zOff)
+        public void SetTransOffset(double xOff, double yOff, double zOff)
         {
             translOffset = new double[] { xOff, yOff, zOff };
         }
 
-        public void setRotOffset(double xOff, double yOff, double zOff)
+        public void SetRotOffset(double xOff, double yOff, double zOff)
         {
             rotOffset = new double[] { xOff, yOff, zOff };
         }

@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 namespace Kincap.Controls
 {
     /// <summary>
-    /// Logique d'interaction pour ConsoleControl.xaml
+    /// Interaction logic for ConsoleControl.xaml
     /// </summary>
     public partial class ConsoleControl : UserControl
     {

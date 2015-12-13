@@ -45,12 +45,12 @@ namespace Kincap
             recording = true;
         }
 
-        public void setBvhEditor(BVHEditorControl bvhEC)
+        public void SetBvhEditor(BVHEditorControl bvhEC)
         {
             bvhEditor = bvhEC;
         }
 
-        public void closeBVHFile()
+        public void CloseBVHFile()
         {
             sw.Stop(); // finished recording
             file.Flush();
@@ -62,12 +62,12 @@ namespace Kincap
             recording = false;
         }
 
-        public bool isRecording
+        public bool IsRecording
         {
             get { return recording; }
         }
 
-        public bool isInitializing
+        public bool IsInitializing
         {
             get { return initializing; }
         }
@@ -77,7 +77,7 @@ namespace Kincap
             this.intializingCounter++;
             for (int k = 0; k < bvhSkeleton.Bones.Count; k++)
             {
-                double[] bonevector = BVHKinectSkeleton.getBoneVectorOutofJointPosition(bvhSkeleton.Bones[k], skel);
+                double[] bonevector = BVHKinectSkeleton.GetBoneVectorOutofJointPosition(bvhSkeleton.Bones[k], skel);
                 {
                     if (this.intializingCounter == 1)
                     {
@@ -95,7 +95,7 @@ namespace Kincap
             }
         }
 
-        public void startWritingEntry()
+        public void StartWritingEntry()
         {
             for (int k = 0; k < bvhSkeleton.Bones.Count; k++)
             {
@@ -106,36 +106,36 @@ namespace Kincap
                 switch (bvhSkeleton.Bones[k].Axis)
                 {
                     case TransAxis.X:
-                        bvhSkeleton.Bones[k].setTransOffset(length, 0, 0);
+                        bvhSkeleton.Bones[k].SetTransOffset(length, 0, 0);
                         break;
                     case TransAxis.Y:
-                        bvhSkeleton.Bones[k].setTransOffset(0, length, 0);
+                        bvhSkeleton.Bones[k].SetTransOffset(0, length, 0);
                         break;
                     case TransAxis.Z:
-                        bvhSkeleton.Bones[k].setTransOffset(0, 0, length);
+                        bvhSkeleton.Bones[k].SetTransOffset(0, 0, length);
                         break;
                     case TransAxis.nX:
-                        bvhSkeleton.Bones[k].setTransOffset(-length, 0, 0);
+                        bvhSkeleton.Bones[k].SetTransOffset(-length, 0, 0);
                         break;
                     case TransAxis.nY:
-                        bvhSkeleton.Bones[k].setTransOffset(0, -length, 0);
+                        bvhSkeleton.Bones[k].SetTransOffset(0, -length, 0);
                         break;
                     case TransAxis.nZ:
-                        bvhSkeleton.Bones[k].setTransOffset(0, 0, -length);
+                        bvhSkeleton.Bones[k].SetTransOffset(0, 0, -length);
                         break;
 
                     default:
-                        bvhSkeleton.Bones[k].setTransOffset(tempOffsetMatrix[0, k], tempOffsetMatrix[1, k], tempOffsetMatrix[2, k]);
+                        bvhSkeleton.Bones[k].SetTransOffset(tempOffsetMatrix[0, k], tempOffsetMatrix[1, k], tempOffsetMatrix[2, k]);
                         break;
                 }
             }
 
             this.initializing = false;
-            writeEntry();
+            WriteEntry();
             file.Flush();
         }
 
-        private void writeEntry()
+        private void WriteEntry()
         {
             List<List<BVHBone>> bonesListList = new List<List<BVHBone>>();
             List<BVHBone> resultList;
@@ -164,7 +164,7 @@ namespace Kincap
                 }
 
                 BVHBone currentBone = bonesListList.Last().First();
-                string tabs = calcTabs(currentBone);
+                string tabs = CalcTabs(currentBone);
                 if (currentBone.Root == true)
                     file.WriteLine("ROOT " + currentBone.Name);
                 else if (currentBone.End == true)
@@ -181,7 +181,7 @@ namespace Kincap
                 {
                     while (bonesListList.Count != 0 && bonesListList.Last().Count == 1)
                     {
-                        tabs = calcTabs(bonesListList.Last()[0]);
+                        tabs = CalcTabs(bonesListList.Last()[0]);
                         foreach (List<BVHBone> liste in bonesListList)
                         {
                             if (liste.Contains(bonesListList.Last()[0]))
@@ -203,18 +203,18 @@ namespace Kincap
                         {
                             bonesListList.Remove(bonesListList.Last());
                         }
-                        tabs = calcTabs(bonesListList.Last()[0]);
+                        tabs = CalcTabs(bonesListList.Last()[0]);
                         file.WriteLine(tabs + "}");
                     }
                 }
                 else
                 {
-                    file.WriteLine(tabs + "\t" + writeChannels(currentBone));
+                    file.WriteLine(tabs + "\t" + WriteChannels(currentBone));
                 }
                 bvhSkeleton.Bones.Remove(currentBone);
                 bvhSkeletonWritten.AddBone(currentBone);
             }
-            bvhSkeletonWritten.copyParameters(bvhSkeleton);
+            bvhSkeletonWritten.CopyParameters(bvhSkeleton);
         }
 
         public void Motion(Skeleton skel)
@@ -226,7 +226,7 @@ namespace Kincap
                 if (bvhSkeletonWritten.Bones[k].End == false)
                 {
                     double[] degVec = new double[3];
-                    degVec = BVHKinectSkeleton.getEulerFromBone(bvhSkeletonWritten.Bones[k], skel);
+                    degVec = BVHKinectSkeleton.GetEulerFromBone(bvhSkeletonWritten.Bones[k], skel);
 
                     int indexOffset = 0;
                     if (bvhSkeletonWritten.Bones[k].Root == true)
@@ -247,7 +247,7 @@ namespace Kincap
                         bvhEditor.TextBoxAngles = textBox;
 
                         // Position
-                        JointType KinectJoint = BVHKinectSkeleton.getJointTypeFromBVHBone(bvhSkeletonWritten.Bones[k]);
+                        JointType KinectJoint = BVHKinectSkeleton.GetJointTypeFromBVHBone(bvhSkeletonWritten.Bones[k]);
                         double x = skel.Joints[KinectJoint].Position.X;
                         double y = skel.Joints[KinectJoint].Position.Y;
                         double z = skel.Joints[KinectJoint].Position.Z;
@@ -255,7 +255,7 @@ namespace Kincap
 
                         // Length
                         BVHBone tempBone = bvhSkeletonWritten.Bones.Find(i => i.Name == KinectJoint.ToString());
-                        double[] boneVec = BVHKinectSkeleton.getBoneVectorOutofJointPosition(tempBone, skel);
+                        double[] boneVec = BVHKinectSkeleton.GetBoneVectorOutofJointPosition(tempBone, skel);
                         double length = Math.Sqrt(Math.Pow(boneVec[0], 2) + Math.Pow(boneVec[1], 2) + Math.Pow(boneVec[2], 2));
                         length = Math.Round(length, 2);
                         bvhEditor.TextBoxLength = length.ToString();
@@ -268,7 +268,7 @@ namespace Kincap
             tempMotionVektor[1] = Math.Round(skel.Position.Y * 100, 2) + 120;
             tempMotionVektor[2] = 300 - Math.Round(skel.Position.Z * 100, 2);
 
-            writeMotion(tempMotionVektor);
+            WriteMotion(tempMotionVektor);
             file.Flush();
 
             elapsedTimeSec = Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 1000, 2);
@@ -279,7 +279,7 @@ namespace Kincap
 
         }
 
-        private void writeMotion(double[] tempMotionVektor)
+        private void WriteMotion(double[] tempMotionVektor)
         {
             string motionStringValues = "";
 
@@ -299,7 +299,7 @@ namespace Kincap
             frameCounter++;
         }
 
-        private string writeChannels(BVHBone bone)
+        private string WriteChannels(BVHBone bone)
         {
             string output = "CHANNELS " + bone.Channels.Length.ToString() + " ";
 
@@ -311,7 +311,7 @@ namespace Kincap
             return output;
         }
 
-        private string calcTabs(BVHBone currentBone)
+        private string CalcTabs(BVHBone currentBone)
         {
             int depth = currentBone.Depth;
             string tabs = "";

@@ -34,9 +34,6 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="{Binding DateTime}" Grid.Row="0" FontWeight="Bold" Margin="5,0,5,0"/>
-
-                <!--<TextBlock Text="{Binding Index}" Grid.Row="0" Grid.Column="1" FontWeight="Bold" Margin="5,0,5,0" />-->
-
                 <TextBlock Text="{Binding Message}" Grid.Row="1" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
@@ -44,9 +41,6 @@
     <Grid>
         <Border BorderThickness="1" BorderBrush="White">
             <DockPanel>
-                <!--<TextBlock Text="{Binding Count, StringFormat='{}{0} Items'}"
-                   DockPanel.Dock="Top"/>-->
-
                 <ItemsControl x:Name="scroller_logs" ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}">
                     <ItemsControl.Template>
                         <ControlTemplate>

@@ -80,7 +80,7 @@ namespace Kincap
             return value;
         }
 
-        public static JointType getJointTypeFromBVHBone(BVHBone bone)
+        public static JointType GetJointTypeFromBVHBone(BVHBone bone)
         {
             JointType kinectJoint = new JointType();
 
@@ -156,7 +156,7 @@ namespace Kincap
             return kinectJoint;
         }
 
-        public static double[] getEulerFromBone(BVHBone bone, Skeleton skel)
+        public static double[] GetEulerFromBone(BVHBone bone, Skeleton skel)
         {
             double[] degVec = new double[3] { 0, 0, 0 };
             double[] correctionDegVec = new double[3] { 0, 0, 0 };
@@ -164,7 +164,7 @@ namespace Kincap
             JointType ParentKinectJoint = new JointType();
             bool noData = false;
 
-            kinectJoint = getJointTypeFromBVHBone(bone);
+            kinectJoint = GetJointTypeFromBVHBone(bone);
 
 
 
@@ -228,15 +228,15 @@ namespace Kincap
             if (bone.Root == false)
             {
 
-                // The BVH skeleton have more bones such as the Kinect Skeleton, Joints have this permanent rotations 0 0 0
+                // The BVH skeleton have more bones than the Kinect Skeleton, Joints have this permanent rotations 0 0 0
                 if (noData == false)
                 {
                     Quaternion tempQuat;
 
                     if (!(bone.Name == "HipRight" || bone.Name == "HipLeft" || bone.Name == "ShoulderLeft" || bone.Name == "ShoulderRight" || bone.Name == "HipCenter2"))
                     {
-                        tempQuat = MathHelper.vector42Quat(skel.BoneOrientations[kinectJoint].HierarchicalRotation.Quaternion);
-                        degVec = MathHelper.quat2Deg(tempQuat);
+                        tempQuat = MathHelper.Vector42Quat(skel.BoneOrientations[kinectJoint].HierarchicalRotation.Quaternion);
+                        degVec = MathHelper.Quat2Deg(tempQuat);
 
                         if (bone.Name == "HipCenter2")
                         {
@@ -263,7 +263,7 @@ namespace Kincap
 
                         }
                         /*
-                        // Rechte Shoulder
+                        // Right Shoulder
                         if (bone.Name == "ShoulderRight")
                         {
                             double[] tempDecVec = new double[3] { degVec[0], degVec[1], degVec[2] };
@@ -341,12 +341,12 @@ namespace Kincap
                         if (bone.Name == "ShoulderLeft" || bone.Name == "ShoulderRight")
                         {
                             double[] rotationOffset = new double[3];
-                            rotationOffset = MathHelper.quat2Deg(skel.BoneOrientations[JointType.ShoulderCenter].AbsoluteRotation.Quaternion);
+                            rotationOffset = MathHelper.Quat2Deg(skel.BoneOrientations[JointType.ShoulderCenter].AbsoluteRotation.Quaternion);
                             Matrix3D rotMat = MathHelper.GetRotationMatrix(-(rotationOffset[0] * Math.PI / 180) - 180, 0, 0);
                             Vector3D vec2 = Vector3D.Multiply(vec, rotMat);
 
-                            tempQuat = MathHelper.getQuaternion(axis, vec2);
-                            degVec = MathHelper.quat2Deg(tempQuat);
+                            tempQuat = MathHelper.GetQuaternion(axis, vec2);
+                            degVec = MathHelper.Quat2Deg(tempQuat);
 
                             degVec[0] = degVec[0];
                             degVec[1] = degVec[1]; //+ rotationOffset[1];
@@ -358,11 +358,11 @@ namespace Kincap
                         if (bone.Name == "HipCenter2")
                         {
                             double[] rotationOffset = new double[3] { 0, 0, 0 };
-                            rotationOffset = MathHelper.quat2Deg(skel.BoneOrientations[JointType.HipCenter].AbsoluteRotation.Quaternion);
+                            rotationOffset = MathHelper.Quat2Deg(skel.BoneOrientations[JointType.HipCenter].AbsoluteRotation.Quaternion);
                             Vector3D vec2 = Vector3D.Multiply(vec, MathHelper.GetRotationMatrixY(-rotationOffset[1] * Math.PI / 180));
-                            tempQuat = MathHelper.getQuaternion(axis, vec2);
+                            tempQuat = MathHelper.GetQuaternion(axis, vec2);
 
-                            degVec = MathHelper.quat2Deg(tempQuat);
+                            degVec = MathHelper.Quat2Deg(tempQuat);
                             degVec[1] = 0;
 
                             degVec[0] = -degVec[0];
@@ -374,11 +374,11 @@ namespace Kincap
                         if (bone.Name == "HipRight" || bone.Name == "HipLeft")
                         {
                             double[] rotationOffset = new double[3] { 0, 0, 0 };
-                            rotationOffset = MathHelper.quat2Deg(skel.BoneOrientations[JointType.HipCenter].AbsoluteRotation.Quaternion);
+                            rotationOffset = MathHelper.Quat2Deg(skel.BoneOrientations[JointType.HipCenter].AbsoluteRotation.Quaternion);
                             Vector3D vec2 = Vector3D.Multiply(vec, MathHelper.GetRotationMatrixY(-rotationOffset[1] * Math.PI / 180));
 
-                            tempQuat = MathHelper.getQuaternion(axis, vec2);
-                            degVec = MathHelper.quat2Deg(tempQuat);
+                            tempQuat = MathHelper.GetQuaternion(axis, vec2);
+                            degVec = MathHelper.Quat2Deg(tempQuat);
 
 
                             degVec[0] = -degVec[0];
@@ -393,9 +393,9 @@ namespace Kincap
             else
             {
 
-                // Kinect camera coordinate system is exactly mirrored the user coordinate system
+                // Kinect camera coordinate system is exactly the mirrore of user coordinate system
                 Vector4 tempQuat = skel.BoneOrientations[kinectJoint].AbsoluteRotation.Quaternion;
-                degVec = MathHelper.quat2Deg(tempQuat);
+                degVec = MathHelper.Quat2Deg(tempQuat);
 
 
                 // Hip is always aligned parallel to the ground. Only the upper body can "bend"
@@ -405,7 +405,7 @@ namespace Kincap
 
             }
             // correction
-            degVec = MathHelper.addArray(degVec, correctionDegVec);
+            degVec = MathHelper.AddArray(degVec, correctionDegVec);
 
 
             // If angle is about 180 degrees
@@ -421,11 +421,11 @@ namespace Kincap
                 }
             }
 
-            bone.setRotOffset(degVec[0], degVec[1], degVec[2]); // is not actually required
+            bone.SetRotOffset(degVec[0], degVec[1], degVec[2]); // is not actually required
             return degVec;
         }
 
-        public static double[] getBoneVectorOutofJointPosition(BVHBone bvhBone, Skeleton skel)
+        public static double[] GetBoneVectorOutofJointPosition(BVHBone bvhBone, Skeleton skel)
         {
             double[] boneVector = new double[3] { 0, 0, 0 };
             double[] boneVectorParent = new double[3] { 0, 0, 0 };

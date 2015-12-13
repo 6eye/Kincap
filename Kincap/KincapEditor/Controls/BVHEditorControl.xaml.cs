@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace Kincap.Controls
 {
     /// <summary>
-    /// Logique d'interaction pour BVHEditor.xaml
+    /// Interaction logic for BVHEditor.xaml
     /// </summary>
     public partial class BVHEditorControl : UserControl
     {

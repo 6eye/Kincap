@@ -58,7 +58,6 @@ namespace Kincap.Controls
             // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
-                //Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Processing..."));
                 if (potentialSensor.Status == KinectStatus.Connected)
                 {
                     this.sensor = potentialSensor;
@@ -77,17 +76,17 @@ namespace Kincap.Controls
                 return;
 
             sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-            sensor.ColorFrameReady += kinectRuntime_ColorFrameReady;
+            sensor.ColorFrameReady += KinectRuntimeColorFrameReady;
 
             sensor.SkeletonStream.Enable(Settings.SmoothingParam);
-            sensor.SkeletonFrameReady += kinectRuntime_SkeletonFrameReady;
+            sensor.SkeletonFrameReady += KinectRuntimeSkeletonFrameReady;
 
             SkeletonDisplayManager = new SkeletonDisplayManager(sensor, skeleton_canvas);
 
             image_stream.DataContext = colorManager;
         }
 
-        public void toggleButton_stream_Checked(object sender, RoutedEventArgs e)
+        public void ToggleButtonStreamChecked(object sender, RoutedEventArgs e)
         {
             ms_Stream = new MemoryStream();
             ms_Skeleton = new MemoryStream();
@@ -95,7 +94,7 @@ namespace Kincap.Controls
             StartSensor();
         }
 
-        public void toggleButton_stream_UnChecked(object sender, RoutedEventArgs e)
+        public void ToggleButtonStreamUnChecked(object sender, RoutedEventArgs e)
         {
             if (BVHFile != null)
             {
@@ -128,7 +127,7 @@ namespace Kincap.Controls
             }
         }
 
-        void kinectRuntime_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        void KinectRuntimeColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
             if (replay != null && !replay.IsFinished)
                 return;
@@ -147,7 +146,7 @@ namespace Kincap.Controls
             }
         }
 
-        void kinectRuntime_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        void KinectRuntimeSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
             if (replay != null && !replay.IsFinished)
                 return;
@@ -160,25 +159,7 @@ namespace Kincap.Controls
                     if (frame == null)
                         return;
 
-                    //FPS selection. At low frame rates received frames are skipped (not displayed)
-                    switch (Settings.FpsSetting)
-                    {
-                        case 30:
-                            fpsEnd = 1;
-                            break;
-                        case 15:
-                            fpsEnd = 2;
-                            break;
-                        case 10:
-                            fpsEnd = 3;
-                            break;
-                        case 5:
-                            fpsEnd = 6;
-                            break;
-                        case 1:
-                            fpsEnd = 30;
-                            break;
-                    }
+                    fpsEnd = SelectFPS();
 
                     Skeleton[] skeletons = new Skeleton[frame.SkeletonArrayLength];
                     frame.GetSkeletons(ref skeletons);
@@ -190,18 +171,18 @@ namespace Kincap.Controls
                             {
                                 if (BVHFile != null)
                                 {
-                                    if (BVHFile.isRecording == true && BVHFile.isInitializing == true)
+                                    if (BVHFile.IsRecording == true && BVHFile.IsInitializing == true)
                                     {
                                         BVHFile.Entry(skel);
 
                                         if (BVHFile.intializingCounter > initFrames)
                                         {
-                                            BVHFile.startWritingEntry();
+                                            BVHFile.StartWritingEntry();
                                         }
 
                                     }
 
-                                    if (BVHFile.isRecording == true && BVHFile.isInitializing == false)
+                                    if (BVHFile.IsRecording == true && BVHFile.IsInitializing == false)
                                     {
                                         BVHFile.Motion(skel);
                                         Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Recording..."));
@@ -227,7 +208,7 @@ namespace Kincap.Controls
             }
         }
 
-        void sensor_allFramesReady(object sender, AllFramesReadyEventArgs e)
+        void SensorAllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
             if (windowClosing)
                 return;
@@ -237,28 +218,8 @@ namespace Kincap.Controls
            
             if (fpsEnd == 1)
             {
-                //FPS selection. At low frame rates received frames are skipped (not displayed)
-                switch (Settings.FpsSetting)
-                {
-                    case 30:
-                        fpsEnd = 1;
-                        break;
-                    case 15:
-                        fpsEnd = 2;
-                        break;
-                    case 10:
-                        fpsEnd = 3;
-                        break;
-                    case 5:
-                        fpsEnd = 6;
-                        break;
-                    case 1:
-                        fpsEnd = 30;
-                        break;
-                }
-
-
-
+                fpsEnd = SelectFPS();
+                
                 using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
                 {
 
@@ -270,7 +231,7 @@ namespace Kincap.Controls
                         tempColorFrame = ColorImageFrameToBitmap(colorFrame);
                         tempStreamFrame = tempColorFrame;
                         
-                        // help to translate system Drawing.Image to Windows.Media.ImageSource
+                        // Help to translate system Drawing.Image to Windows.Media.ImageSource
                         BitmapImage bi = new BitmapImage();
                         bi.BeginInit();
                         // Save to a memory stream...
@@ -282,7 +243,7 @@ namespace Kincap.Controls
                         bi.EndInit();
                         this.image_stream.Source = bi;
 
-                        //record
+                        // Record
                         if (recorder != null && recorder.Options != 0)
                             recorder.Record(colorFrame);
                         
@@ -303,18 +264,18 @@ namespace Kincap.Controls
                                 {
                                     if (BVHFile != null)
                                     {
-                                        if (BVHFile.isRecording == true && BVHFile.isInitializing == true)
+                                        if (BVHFile.IsRecording == true && BVHFile.IsInitializing == true)
                                         {
                                             BVHFile.Entry(skel);
 
                                             if (BVHFile.intializingCounter > initFrames)
                                             {
-                                                BVHFile.startWritingEntry();
+                                                BVHFile.StartWritingEntry();
                                             }
 
                                         }
 
-                                        if (BVHFile.isRecording == true && BVHFile.isInitializing == false)
+                                        if (BVHFile.IsRecording == true && BVHFile.IsInitializing == false)
                                         {
                                             BVHFile.Motion(skel);
                                             Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now,"Recording..."));
@@ -349,13 +310,13 @@ namespace Kincap.Controls
             this.DrawBonesAndJoints(skel, graphicBox);
         }
 
-        private void MainWindow_FormClosing(object sender, CancelEventArgs e)
+        private void MainWindowFormClosing(object sender, CancelEventArgs e)
         {
             windowClosing = true;
             StopKinect(sensor);
         }
 
-        private void MainWindow_FormClosed(object sender, EventArgs e)
+        private void MainWindowFormClosed(object sender, EventArgs e)
         {
             StopKinect(sensor);
         }
@@ -372,7 +333,7 @@ namespace Kincap.Controls
             /// Brush used for drawing joints that are currently inferred      
             System.Drawing.Pen inferredJointPen = new System.Drawing.Pen(System.Drawing.Color.Yellow);
 
-            // paint found points as circles
+            // Paint found points as circles
             foreach (Joint joint in skeleton.Joints)
             {
                 System.Drawing.Pen drawPen = null;
@@ -468,7 +429,7 @@ namespace Kincap.Controls
 
             System.Drawing.Point startPixel = SkeletonPointToScreen(joint0.Position);
             System.Drawing.Point endPixel = SkeletonPointToScreen(joint1.Position);
-            double distanceBtw2Joints = Math.Round(calcDistanceBtw2Points(joint0.Position, joint1.Position) * 100) / 100;
+            double distanceBtw2Joints = Math.Round(CalcDistanceBtw2Points(joint0.Position, joint1.Position) * 100) / 100;
 
             // Line between two joints is drawn
             graphicBox.DrawLine(drawPen, startPixel, endPixel);
@@ -489,7 +450,7 @@ namespace Kincap.Controls
             return new System.Drawing.Point(depthPoint.X, depthPoint.Y);
         }
 
-        private double calcDistanceBtw2Points(SkeletonPoint Joint1, SkeletonPoint Joint2)
+        private double CalcDistanceBtw2Points(SkeletonPoint Joint1, SkeletonPoint Joint2)
         {
             double distanceBtwJoints = Math.Sqrt(Math.Pow(Joint1.X - Joint2.X, 2) + Math.Pow(Joint1.Y - Joint2.Y, 2) + Math.Pow(Joint1.Z - Joint2.Z, 2));
             return distanceBtwJoints;
@@ -509,7 +470,7 @@ namespace Kincap.Controls
             return bitmapFrame;
         }
 
-        public void toggleButton_rec_Checked(object sender, RoutedEventArgs e)
+        public void ToggleButtonRecChecked(object sender, RoutedEventArgs e)
         {
             Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Initialization"));
 
@@ -528,16 +489,16 @@ namespace Kincap.Controls
                     BVHFile = new BVHWriter(txtFileName);
                     Window w = Window.GetWindow(this);
                     MainWindow mw = (MainWindow)w;
-                    BVHFile.setBvhEditor(mw.bvhEditor);
+                    BVHFile.SetBvhEditor(mw.bvhEditor);
                 }
             }
         }
 
-        public void toggleButton_rec_UnChecked(object sender, RoutedEventArgs e)
+        public void ToggleButtonRecUnChecked(object sender, RoutedEventArgs e)
         {
             if (BVHFile != null)
             {
-                BVHFile.closeBVHFile();
+                BVHFile.CloseBVHFile();
                 Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Record saved"));
                 BVHFile = null;
             }
@@ -589,7 +550,7 @@ namespace Kincap.Controls
 
         //RECORD & REPLAY
         readonly ColorStreamManager colorManager = new ColorStreamManager();
-        private void replayButton_Click(object sender, RoutedEventArgs e)
+        private void ReplayButtonClick(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog { Title = "Select filename", Filter = "Replay files|*.replay" };
 
@@ -597,8 +558,8 @@ namespace Kincap.Controls
             {
                 if (replay != null)
                 {
-                    replay.SkeletonFrameReady -= replay_SkeletonFrameReady;
-                    replay.ColorImageFrameReady -= replay_ColorImageFrameReady;
+                    replay.SkeletonFrameReady -= ReplaySkeletonFrameReady;
+                    replay.ColorImageFrameReady -= ReplayColorImageFrameReady;
                     replay.Stop();
                 }
 
@@ -607,44 +568,26 @@ namespace Kincap.Controls
 
                 replay = new KinectReplay(recordStream);
 
-                replay.SkeletonFrameReady += replay_SkeletonFrameReady;
-                replay.ColorImageFrameReady += replay_ColorImageFrameReady;
+                replay.SkeletonFrameReady += ReplaySkeletonFrameReady;
+                replay.ColorImageFrameReady += ReplayColorImageFrameReady;
 
                 replay.Start();
             }
         }
 
-        void replay_ColorImageFrameReady(object sender, ReplayColorImageFrameReadyEventArgs e)
+        void ReplayColorImageFrameReady(object sender, ReplayColorImageFrameReadyEventArgs e)
         {
             colorManager.Update(e.ColorImageFrame);
         }
 
-        void replay_SkeletonFrameReady(object sender, ReplaySkeletonFrameReadyEventArgs e)
+        void ReplaySkeletonFrameReady(object sender, ReplaySkeletonFrameReadyEventArgs e)
         {
             if (fpsEnd == 1)
             {
                 if (e.SkeletonFrame == null)
                     return;
 
-                //FPS selection. At low frame rates received frames are skipped (not displayed)
-                switch (Settings.FpsSetting)
-                {
-                    case 30:
-                        fpsEnd = 1;
-                        break;
-                    case 15:
-                        fpsEnd = 2;
-                        break;
-                    case 10:
-                        fpsEnd = 3;
-                        break;
-                    case 5:
-                        fpsEnd = 6;
-                        break;
-                    case 1:
-                        fpsEnd = 30;
-                        break;
-                }
+                fpsEnd = SelectFPS();
 
                 Skeleton[] skeletons = e.SkeletonFrame.Skeletons;
                 if (skeletons.Length != 0)
@@ -655,17 +598,17 @@ namespace Kincap.Controls
                         {
                             if (BVHFile != null)
                             {
-                                if (BVHFile.isRecording == true && BVHFile.isInitializing == true)
+                                if (BVHFile.IsRecording == true && BVHFile.IsInitializing == true)
                                 {
                                     BVHFile.Entry(skel);
 
                                     if (BVHFile.intializingCounter > initFrames)
                                     {
-                                        BVHFile.startWritingEntry();
+                                        BVHFile.StartWritingEntry();
                                     }
                                 }
 
-                                if (BVHFile.isRecording == true && BVHFile.isInitializing == false)
+                                if (BVHFile.IsRecording == true && BVHFile.IsInitializing == false)
                                 {
                                     BVHFile.Motion(skel);
                                     Controls.ConsoleControl.LogEntries.Add(new LogEntry(DateTime.Now, "Recording..."));
@@ -706,6 +649,34 @@ namespace Kincap.Controls
                 recorder = null;
                 return;
             }
+        }
+
+        // MISC
+
+        short SelectFPS()
+        {
+            short fpsEnd = 30;
+            //FPS selection. At low frame rate, received frames are skipped (not displayed)
+            switch (Settings.FpsSetting)
+            {
+                case 30:
+                    fpsEnd = 1;
+                    break;
+                case 15:
+                    fpsEnd = 2;
+                    break;
+                case 10:
+                    fpsEnd = 3;
+                    break;
+                case 5:
+                    fpsEnd = 6;
+                    break;
+                case 1:
+                    fpsEnd = 30;
+                    break;
+            }
+
+            return fpsEnd;
         }
     }
 }

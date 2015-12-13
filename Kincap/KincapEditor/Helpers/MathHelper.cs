@@ -12,7 +12,7 @@ namespace Kincap
     class MathHelper
     {
 
-        public static double[] quat2Deg(Quaternion vec)
+        public static double[] Quat2Deg(Quaternion vec)
         {
             double[] value = new double[3];
             value[0] = Math.Atan2(2 * (vec.W * vec.X + vec.Y * vec.Z), 1 - 2 * (Math.Pow(vec.X, 2) + Math.Pow(vec.Y, 2)));
@@ -110,7 +110,7 @@ namespace Kincap
         }
 
 
-        public static Quaternion getQuaternion(Vector3D v0, Vector3D v1)
+        public static Quaternion GetQuaternion(Vector3D v0, Vector3D v1)
         {
             Quaternion q = new Quaternion();
             // Copy, since cannot modify local
@@ -138,7 +138,7 @@ namespace Kincap
             return q;
         }
 
-        public static Quaternion vector42Quat(Vector4 vec)
+        public static Quaternion Vector42Quat(Vector4 vec)
         {
             Quaternion quat = new Quaternion();
             quat.W = vec.W;
@@ -148,7 +148,7 @@ namespace Kincap
             return quat;
         }
 
-        public static double[] rotMatrix2Deg(Matrix4 mat)
+        public static double[] RotMatrix2Deg(Matrix4 mat)
         {
             double[] value = new double[3];
             // Source : http://social.msdn.microsoft.com/Forums/en-US/b644698d-bdec-47a2-867e-574cf84e5db7/what-is-the-default-sequence-of-hierarchical-rotation-matrix-eg-xyz-#b3946d0d-9658-4c2b-b14b-69e79070c7d2
@@ -170,7 +170,7 @@ namespace Kincap
             return value;
         }
 
-        public static double[] quat2Deg(Vector4 vec)
+        public static double[] Quat2Deg(Vector4 vec)
         {
             double[] value = new double[3];
             value[0] = Math.Atan2(2 * (vec.W * vec.X + vec.Y * vec.Z), 1 - 2 * (Math.Pow(vec.X, 2) + Math.Pow(vec.Y, 2)));
@@ -182,7 +182,7 @@ namespace Kincap
             return value;
         }
 
-        public static double[] addArray(double[] array1, double[] array2)
+        public static double[] AddArray(double[] array1, double[] array2)
         {
             double[] result = new double[3]
             {
